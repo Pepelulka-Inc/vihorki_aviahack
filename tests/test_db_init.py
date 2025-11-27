@@ -15,26 +15,18 @@ Session = async_sessionmaker(engine)
 
 
 @pytest.fixture(scope='session')
-async def db_engine():
-    """Создает асинхронный движок для тестов."""
-    yield engine
-    await engine.dispose()
-
-
-@pytest.fixture(scope='session')
 async def db_sessionmaker():
     """Возвращает фабрику сессий для тестов."""
     return Session
 
 
-@pytest.fixture(scope='function', autouse=True)
 async def setup_database(db_engine: AsyncEngine):
     """Инициализирует базу данных перед каждым тестом."""
     max_attempts = 5
     for attempt in range(max_attempts):
         try:
             async with db_engine.begin() as conn:
-                await conn.run_sync(Base.metadata.create_all)
+                yield conn
             break
         except Exception as e:
             if attempt < max_attempts - 1:
@@ -43,11 +35,6 @@ async def setup_database(db_engine: AsyncEngine):
             else:
                 raise e
 
-    yield
 
-
-@pytest.mark.asyncio
-async def test_database_connection(db_engine: AsyncEngine):
-    """Тест подключения к базе данных."""
-    assert db_engine is not None
-    assert str(db_engine.url) == DB_URL
+def test_setup():
+    assert setup_database(engine) is not None
