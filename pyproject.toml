@@ -46,6 +46,7 @@ target-version = "py311"
  
 [tool.ruff.lint]
 ignore = [
+  "PLR0133", # compare value to value like 1 == 1
   "ANN201", # func return None
   "B024", # is an abstract base class, but it has no abstract methods
   "B904", # force raise ... from err or raise ... from None
