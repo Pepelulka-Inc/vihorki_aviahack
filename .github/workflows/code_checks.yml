@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: secrets
+    secrets: inherit
     strategy:
       matrix:
         python-version: ["3.11", "3.12",  "3.13"]
