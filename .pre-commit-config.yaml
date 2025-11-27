@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.10
+    hooks:
+      - id: ruff
+        args: [--fix]
+
+      - id: ruff-format
+        args: [--config, "lint.ignore=['COM812']"]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.2
+    hooks:
+      - id: gitleaks
+  
+  - repo: https://github.com/GaukeT/pre-commit-mirrors-trivy
+    rev: v0.66.0
+    hooks:
+      - id: trivy-fs
+      - id: trivy-config
+
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
+    rev: v1.0.5
+    hooks:
+      - id: python-bandit-vulnerability-check
+        args: [--skip, "B101", --recursive, clumper]

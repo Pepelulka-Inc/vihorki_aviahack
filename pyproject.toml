@@ -1,0 +1,136 @@
+[project]
+name = "vihorki-aviahack"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "bandit>=1.9.2",
+    "pre-commit>=4.5.0",
+    "trivy-py>=0.66.0.1",
+]
+
+[tool.ruff]
+exclude = [
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".git-rewrite",
+  ".hg",
+  ".ipynb_checkpoints",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pyenv",
+  ".pytest_cache",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  ".vscode",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "site-packages",
+  "venv",
+]
+force-exclude = true
+line-length = 120
+indent-width = 4
+target-version = "py311"
+ 
+[tool.ruff.lint]
+ignore = [
+  "ANN201", # func return None
+  "B024", # is an abstract base class, but it has no abstract methods
+  "B904", # force raise ... from err or raise ... from None
+  "B905", # zip() without an explicit strict= parameter
+  "E501", # line length, should be checked and fixed by black
+  "UP004", # [*] Class ... inherits from object
+  "UP007", # Use X | Y for type annotations
+  "UP008", # Use super() instead of super(__class__, self)
+  "UP009", # [*] UTF-8 encoding declaration is unnecessary
+  "UP010", # [*] Unnecessary __future__ import ...
+  "UP012", # [*] Unnecessary UTF-8 encoding argument to encode
+  "UP014", # Convert RequestData from NamedTuple functional to class syntax
+  "UP015", # [*] Unnecessary open mode parameters
+  "UP018", # [*] Unnecessary int call (rewrite as a literal)
+  "UP024", # [*] Replace aliased errors with OSError
+  "UP026", # [*] mock is deprecated, use unittest.mock
+  "UP027", # [*] Replace unpacked list comprehension with a generator expression
+  "UP028", # Replace yield over for loop with yield from
+  "UP030", # Use implicit references for positional format fields
+  "UP031", # Use format specifiers instead of percent format
+  "UP032", # [*] Use f-string instead of format call
+  "UP034", # [*] Avoid extraneous parentheses
+  "UP035", # Import from collections.abc
+  "UP037", # [*] Remove quotes from type annotation
+  "UP038",# Use X | Y in isinstance call instead of (X, Y)
+]
+extend-select = [
+  "E", # Pycodestyle errors
+  "W", # Pycodestyle warnings
+  "PL", # Pylint
+  "B", # Flake8 Bugbear
+  "ASYNC", # Flake8 async
+  "RET", # Flake8 return style
+  "F", # Pyflakes
+  "UP", # Pyupgrade
+  "ANN", # Type annotations
+]
+preview = true
+ 
+[tool.ruff.format]
+quote-style = "single" # Use single quotes for strings
+indent-style = "space" # Indent with spaces, rather than tabs
+
+[tool.bandit]
+exclude_dirs = ["tests", "path/to/file"]
+tests = ["B201", "B301"]
+skips = ["B101", "B601"]
+
+[tool.bandit.any_other_function_with_shell_equals_true]
+no_shell = [
+  "os.execl",
+  "os.execle",
+  "os.execlp",
+  "os.execlpe",
+  "os.execv",
+  "os.execve",
+  "os.execvp",
+  "os.execvpe",
+  "os.spawnl",
+  "os.spawnle",
+  "os.spawnlp",
+  "os.spawnlpe",
+  "os.spawnv",
+  "os.spawnve",
+  "os.spawnvp",
+  "os.spawnvpe",
+  "os.startfile"
+]
+shell = [
+  "os.system",
+  "os.popen",
+  "os.popen2",
+  "os.popen3",
+  "os.popen4",
+  "popen2.popen2",
+  "popen2.popen3",
+  "popen2.popen4",
+  "popen2.Popen3",
+  "popen2.Popen4",
+  "commands.getoutput",
+  "commands.getstatusoutput"
+]
+subprocess = [
+  "subprocess.Popen",
+  "subprocess.call",
+  "subprocess.check_call",
+  "subprocess.check_output"
+]
