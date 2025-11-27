@@ -5,7 +5,23 @@ import pytest
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncEngine
 from sqlalchemy.orm import declarative_base
 
-from vihorki.infrastructure.settings import DB_URL
+from vihorki.infrastructure.settings import DB_URL, DB_HOST, DB_PASSWORD, DB_PORT
+
+
+def test_get_pwd():
+    assert DB_PASSWORD is not None
+
+
+def test_get_host():
+    assert DB_HOST is not None
+
+
+def test_get_port():
+    assert DB_PORT is not None
+
+
+def test_get_url():
+    assert DB_URL is not None
 
 
 logger = logging.getLogger(__name__)
