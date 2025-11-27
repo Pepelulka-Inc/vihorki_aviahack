@@ -44,3 +44,10 @@ async def setup_database(db_engine: AsyncEngine):
                 raise e
 
     yield
+
+
+@pytest.mark.asyncio
+async def test_database_connection(db_engine: AsyncEngine):
+    """Тест подключения к базе данных."""
+    assert db_engine is not None
+    assert str(db_engine.url) == DB_URL
