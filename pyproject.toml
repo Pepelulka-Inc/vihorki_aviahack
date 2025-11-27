@@ -134,3 +134,8 @@ subprocess = [
   "subprocess.check_call",
   "subprocess.check_output"
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.1",
+]
