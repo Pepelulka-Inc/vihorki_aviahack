@@ -5,7 +5,7 @@ import json
 
 from vihorki.main import app, healthcheck, on_startup
 
-
+@pytest.mark.asyncio
 async def test_healthcheck_returns_correct_data():
     client = app
     resp = await client.get('/health')
@@ -20,7 +20,7 @@ async def test_healthcheck_returns_correct_data():
     assert data["service"] == "vihorki"
     assert isinstance(data["timestamp"], (int, float))
 
-
+@pytest.mark.asyncio
 async def test_on_startup_initializes_db():
     with patch('vihorki.infrastructure.postgres.on_startup.run_db.init_db_and_tables', new=AsyncMock()) as mock_init:
         mock_app = AsyncMock()
@@ -28,7 +28,7 @@ async def test_on_startup_initializes_db():
         
         mock_init.assert_called_once()
 
-
+@pytest.mark.asyncio
 async def test_healthcheck_response_format():
     request = None
     response = await healthcheck()
