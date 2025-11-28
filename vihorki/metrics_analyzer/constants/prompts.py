@@ -71,7 +71,7 @@ ANALYSIS_PROMPT_TEMPLATE = """Проанализируй метрики двух
 
 **Агрегированные метрики визитов:**
 - Новых пользователей: {release_old_new_users:,} ({release_old_new_users_pct:.1f}%)
-- Возвращающихся: {release_old_returning_users:,} ({release_old_returning_users_pct:.1f}%)
+- Возвращающихся: {release_new_returning_users:,} ({release_new_returning_pct:.1f}%)
 - Средняя длительность сессии: {release_old_avg_duration} сек (медиана: {release_old_median_duration} сек)
 - Среднее просмотров страниц: {release_old_avg_pages:.2f} (медиана: {release_old_median_pages})
 
