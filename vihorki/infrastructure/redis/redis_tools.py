@@ -39,13 +39,14 @@ async def redis_conn_context(
 
 
 class RedisCache:
-    cache_client: Redis | RedisCluster
+    def __init__(self, cache_client: Redis | RedisCluster):
+        self._cache_client = cache_client
 
     async def set_value(self, key: str, value: AnyStr, ex: int | timedelta | None = None):
-        await self.cache_client.set(key, value, ex=ex)
+        await self._cache_client.set(key, value, ex=ex)
 
     async def get_value(self, key: str) -> CachedMetric:
-        value = await self.cache_client.get(key)
+        value = await self._cache_client.get(key)
         try:
             return CachedMetric(key=key, value=orjson.loads(value))
         except orjson.JSONDecodeError:
