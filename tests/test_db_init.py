@@ -3,13 +3,11 @@ import asyncio
 
 import pytest
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncEngine
-from sqlalchemy.orm import declarative_base
 
 from vihorki.infrastructure.settings import DB_URL
 
 
 logger = logging.getLogger(__name__)
-Base = declarative_base()
 engine = create_async_engine(DB_URL, echo=True)
 Session = async_sessionmaker(engine)
 
