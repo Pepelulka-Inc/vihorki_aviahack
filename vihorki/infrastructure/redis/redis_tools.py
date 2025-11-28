@@ -15,7 +15,11 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def redis_conn_context(
-    redis_host: str, redis_port: str, redis_user: str | None, redis_password: str | None, redis_is_cluster: bool = False
+    redis_host: str,
+    redis_port: str,
+    redis_user: str | None = None,
+    redis_password: str | None = None,
+    redis_is_cluster: bool = False,
 ) -> AsyncGenerator[RedisCluster | Redis, None]:
     if redis_is_cluster:
         conn = RedisCluster(
