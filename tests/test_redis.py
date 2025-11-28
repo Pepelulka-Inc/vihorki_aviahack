@@ -20,7 +20,7 @@ async def test_redis_cache_client():
     mock_redis.get = AsyncMock(return_value=test_value_bytes)
 
     with patch("vihorki.infrastructure.redis.redis_tools.Redis", return_value=mock_redis):
-        async with redis_conn_context(redis_host="localhost", port=6379) as redis:
+        async with redis_conn_context(redis_host="localhost", redis_port=6379) as redis:
             client = RedisCache(redis)
 
             await client.set_value(test_key, test_value_bytes, ex=test_expiration)
