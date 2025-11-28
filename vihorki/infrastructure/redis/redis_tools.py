@@ -7,7 +7,7 @@ from datetime import timedelta
 from redis.asyncio import Redis, RedisCluster
 from redis.cluster import ClusterNode
 
-from domain.entities.cached_message import CachedMetric
+from vihorki.domain.entities.cached_message import CachedMetric
 
 
 logger = logging.getLogger(__name__)
