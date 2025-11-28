@@ -84,6 +84,20 @@ class AnalysisOrchestrator:
         Returns:
             Complete analysis results
         """
+        logger.info("Validating metrics payload")
+        is_valid, error_msg = self.api_client.validate_payload(payload)
+        
+        if not is_valid:
+            logger.error(f"Validation failed: {error_msg}")
+            return {
+                "timestamp": datetime.utcnow().isoformat(),
+                "project": payload.metadata.project_name,
+                "validation": {
+                    "status": "failed",
+                    "error": error_msg
+                }
+            }
+            
         results = {
             "timestamp": datetime.utcnow().isoformat(),
             "project": payload.metadata.project_name,
@@ -92,17 +106,6 @@ class AnalysisOrchestrator:
                 payload.releases[1].release_info.version
             ]
         }
-
-        logger.info("Validating metrics payload")
-        is_valid, error_msg = self.api_client.validate_payload(payload)
-        
-        if not is_valid:
-            logger.error(f"Validation failed: {error_msg}")
-            results["validation"] = {
-                "status": "failed",
-                "error": error_msg
-            }
-            return results
 
         results["validation"] = {"status": "passed"}
         logger.info("Validation passed")
