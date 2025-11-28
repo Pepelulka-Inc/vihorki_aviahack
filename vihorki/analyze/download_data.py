@@ -2,8 +2,7 @@ import pandas as pd
 import pyarrow.parquet as pq
 import numpy as np
 from datetime import datetime, timezone
-import time
-
+import json, ast, time
 
 def load_parquet_pandas(path, batch_size=50):
     start = time.time()
