@@ -16,12 +16,10 @@ Session = async_sessionmaker(engine)
 
 @pytest.fixture(scope='session')
 async def db_sessionmaker():
-    """Возвращает фабрику сессий для тестов."""
     return Session
 
 
 async def setup_database(db_engine: AsyncEngine):
-    """Инициализирует базу данных перед каждым тестом."""
     max_attempts = 5
     for attempt in range(max_attempts):
         try:
