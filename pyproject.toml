@@ -6,7 +6,10 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "asyncpg>=0.31.0",
+    "attrs>=25.4.0",
     "bandit>=1.9.2",
+    "boto3>=1.41.5",
+    "botocore>=1.41.5",
     "pre-commit>=4.5.0",
     "sqlalchemy>=2.0.44",
     "trivy-py>=0.66.0.1",
@@ -48,6 +51,10 @@ target-version = "py311"
  
 [tool.ruff.lint]
 ignore = [
+  "ANN204", # returning type for init method
+  "ANN002", # annotation for args
+  "ANN003", # annotation for kwargs
+  "ANN401", # using typing.Any
   "PLR0133", # compare value to value like 1 == 1
   "ANN201", # func return None
   "B024", # is an abstract base class, but it has no abstract methods
