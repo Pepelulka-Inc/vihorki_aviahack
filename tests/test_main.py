@@ -6,8 +6,8 @@ import json
 from vihorki.main import app, healthcheck, on_startup
 
 
-async def test_healthcheck_returns_correct_data(aiohttp_client):
-    client = await aiohttp_client(app)
+async def test_healthcheck_returns_correct_data():
+    client = app
     resp = await client.get('/health')
     
     assert resp.status == 200
