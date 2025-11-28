@@ -1,9 +1,9 @@
-import json
 import logging
 from typing import AsyncGenerator, AnyStr
 from contextlib import asynccontextmanager
 from datetime import timedelta
 
+import orjson
 from redis.asyncio import Redis, RedisCluster
 from redis.cluster import ClusterNode
 
@@ -43,7 +43,7 @@ class RedisCache:
     async def get_value(self, key: str) -> CachedMetric:
         value = await self.cache_client.get(key)
         try:
-            return CachedMetric(key=key, value=json.loads(value))
-        except json.JSONDecodeError:
+            return CachedMetric(key=key, value=orjson.loads(value))
+        except orjson.JSONDecodeError:
             logger.error('Wrong redis value: %s', value)
             raise
