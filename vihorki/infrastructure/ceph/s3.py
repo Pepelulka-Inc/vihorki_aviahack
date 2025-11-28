@@ -15,7 +15,7 @@ import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
 
-from ceph.common.filestorage import (
+from vihorki.infrastructure.ceph.common.filestorage import (
     IFile,
     IFileStorageAdapter,
     Diff,
