@@ -1,45 +1,37 @@
-from sqlalchemy import Column, Integer, String, Uuid, ForeignKey, BigInteger
-from sqlalchemy.orm import relationship, declarative_base
-
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
 
-class UserModel(Base):
-    __tablename__ = 'users'
-    user_id = Column(Uuid, primary_key=True)
-    name = Column(String(255), nullable=False)
-    surname = Column(String(255), nullable=False)
-    photo_url = Column(String(255))
-    phone_number = Column(String(20))
-    email = Column(String(255), unique=True, nullable=False)
-    hashed_password_base64 = Column(String(255), nullable=False)
-    cart_entries = relationship('ShoppingCartEntry', back_populates='user_model')
+class VisitTable(Base):
+    __tablename__ = 'visits'
 
-    def to_dict(self):
-        return {
-            'user_id': str(self.user_id),
-            'name': self.name,
-            'surname': self.surname,
-            'photo_url': self.photo_url,
-            'phone_number': self.phone_number,
-            'email': self.email,
-        }
+    visit_id = Column(Integer, primary_key=True, name='visitId')
+    watch_ids = Column(String, name='watchIDs')
+    date_time = Column(DateTime, name='dateTime')
+    is_new_user = Column(Boolean, name='isNewUser')
+    start_url = Column(String, name='startURL')
+    end_url = Column(String, name='endURL')
+    page_views = Column(Integer, name='pageViews')
+    visit_duration = Column(Integer, name='visitDuration')
+    region_city = Column(String, name='regionCity')
+    client_id = Column(String, name='clientID')
+    last_search_engine_root = Column(String, name='lastSearchEngineRoot')
+    device_category = Column(Integer, name='deviceCategory')
+    mobile_phone = Column(String, name='mobilePhone')
+    mobile_phone_model = Column(String, name='mobilePhoneModel')
+    operating_system = Column(String, name='operatingSystem')
+    browser = Column(String, name='browser')
+    screen_format = Column(String, name='screenFormat')
+    screen_orientation_name = Column(String, name='screenOrientationName')
 
 
-class ShoppingCartEntry(Base):
-    __tablename__ = 'shopping_cart_entries'
-    entry_id = Column(BigInteger, primary_key=True)
-    product_id = Column(Uuid, nullable=False)
-    user_id = Column(Uuid, ForeignKey('users.user_id'), nullable=False)
-    quantity = Column(Integer, default=1)
+class HitTable(Base):
+    __tablename__ = 'hits'
 
-    user_model = relationship('UserModel', back_populates='cart_entries')
-
-    def to_dict(self):
-        return {
-            'entry_id': int(self.entry_id),
-            'product_id': self.product_id,
-            'user_id': self.user_id,
-            'quantity': self.quantity,
-        }
+    watch_id = Column(String, primary_key=True, name='watch_id')
+    client_id = Column(String, name='client_id')
+    url = Column(String, name='url')
+    datetime_hit = Column(DateTime, name='datetime_hit')
+    title = Column(String, name='title')
