@@ -3,7 +3,7 @@ from aiohttp import web
 from unittest.mock import patch, AsyncMock
 import json
 
-from vihorki.main import app, healthcheck, on_startup
+from main import app, healthcheck, on_startup
 
 @pytest.mark.asyncio
 async def test_healthcheck_returns_correct_data():

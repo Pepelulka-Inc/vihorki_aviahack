@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9002:9002"
+    environment:
+      - PYTHONUNBUFFERED=1
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - .venv/          
+            - __pycache__/
+            - "*.pyc"
+        - action: rebuild
+          path: pyproject.toml
+        - action: rebuild
+          path: uv.lock
+
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "habrdb"
+      POSTGRES_USER: "habrpguser"
+      POSTGRES_PASSWORD: "pgpwd4habr"
+    ports:
+      - "5433:5432"  
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

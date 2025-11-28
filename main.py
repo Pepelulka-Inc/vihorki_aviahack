@@ -17,9 +17,12 @@ async def on_startup(app):
         raise
 
 
-async def healthcheck():
-    health_data = {'status': 'healthy', 'timestamp': asyncio.get_event_loop().time(), 'service': 'vihorki'}
-
+async def healthcheck(request):
+    health_data = {
+        'status': 'healthy',
+        'timestamp': asyncio.get_event_loop().time(),
+        'service': 'vihorki'
+    }
     return web.json_response(health_data)
 
 
@@ -29,6 +32,4 @@ app.router.add_get('/health', healthcheck)
 
 
 if __name__ == '__main__':
-    loop = asyncio.SelectorEventLoop()
-    asyncio.set_event_loop(loop)
-    web.run_app(app, port=9002)
+    web.run_app(app, host='0.0.0.0', port=9002)
