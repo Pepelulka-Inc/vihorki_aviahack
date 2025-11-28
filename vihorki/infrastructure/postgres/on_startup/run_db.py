@@ -8,7 +8,7 @@ from vihorki.infrastructure.settings import DB_URL
 
 
 logger = logging.getLogger(__name__)
-logger.info(f'{DB_URL=}')
+
 engine = create_async_engine(DB_URL, echo=True)
 Session = async_sessionmaker(engine)
 
@@ -22,6 +22,7 @@ async def init_db_and_tables():
             return
         except Exception as e:
             if attempt < max_attempts - 1:
+                logger.warning(f'{DB_URL=}')
                 logger.warning(f'Попытка {attempt + 1} не удалась. Повторная попытка через 2 секунды...')
                 await asyncio.sleep(2)
             else:
