@@ -107,6 +107,7 @@ def format_analysis_prompt(
         release_new_new_users_pct=new_new_users_pct,
         release_new_returning_users=release_new.aggregate_metrics.visits.returning_users,
         release_new_returning_pct=new_returning_pct,
+        release_new_returning_users_pct=new_returning_pct,
         release_new_avg_duration=release_new.aggregate_metrics.visits.avg_duration_sec,
         release_new_median_duration=release_new.aggregate_metrics.visits.median_duration_sec,
         release_new_avg_pages=release_new.aggregate_metrics.visits.avg_page_views,
