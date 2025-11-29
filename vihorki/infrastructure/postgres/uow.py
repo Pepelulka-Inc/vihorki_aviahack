@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from vihorki.domain.base import IUnitOfWork
-from vihorki.domain.repositories.metric_repo import IMetricRepository
+from vihorki.infrastructure.postgres.repositories.metric_repo import MetricRepository
 
 
 class UnitOfWork(IUnitOfWork):
@@ -13,7 +13,7 @@ class UnitOfWork(IUnitOfWork):
     async def __aenter__(self):
         async_session = async_sessionmaker(self.engine, expire_on_commit=False)
         self.session = async_session()
-        self.metric_repo = IMetricRepository(self.session)
+        self.metric_repo = MetricRepository(self.session)
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):

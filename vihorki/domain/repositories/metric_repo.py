@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from vihorki.domain.entities.metric import Metric
 
 
 class IMetricRepository(ABC):
-    @abstractmethod
-    async def get_by_release(self, release: str) -> list[Metric]: ...
+    def __init__(self, session: AsyncSession):
+        self.session = session
 
     @abstractmethod
     async def get_by_timedelta(self, time_start: datetime, time_end: datetime) -> list[Metric]: ...
