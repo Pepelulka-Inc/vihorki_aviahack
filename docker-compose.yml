@@ -20,7 +20,7 @@ services:
       - folder_id=${folder_id:-}
       - api_key=${api_key:-}
       - YANDEX_LLM_MODEL=${YANDEX_LLM_MODEL:-qwen3-235b-a22b-fp8}
-      - YANDEX_BASE_URL=https://rest-assistant.api.cloud.yandex.net/v1
+      - YANDEX_BASE_URL=https://rest-assistant.api.cloud.yandex.net/v1  
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - DEFAULT_REASONING_EFFORT=${DEFAULT_REASONING_EFFORT:-medium}
       - ENABLE_API_SUBMISSION=${ENABLE_API_SUBMISSION:-true}
@@ -37,6 +37,18 @@ services:
       retries: 3
       start_period: 40s
 
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - app
+    # Remove healthcheck to avoid conflicts with Streamlit's internal server
+
   postgres:
     image: postgres:13.3-alpine
     environment:
@@ -44,7 +56,7 @@ services:
       POSTGRES_USER: "habrpguser"
       POSTGRES_PASSWORD: "pgpwd4habr"
     ports:
-      - "5433:5432"  # Host:5433 → Container:5432 (avoid conflict with local postgres)
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -57,7 +69,7 @@ services:
   redis:
     image: redis:7.2-alpine
     ports:
-      - "6380:6379"  # Host:6380 → Container:6379 (avoid conflict with local redis)
+      - "6380:6379"
     command: redis-server --appendonly yes
     volumes:
       - redisdata:/data
