@@ -4,12 +4,18 @@ Configuration for Metrics Analyzer Service
 
 import os
 from typing import Optional
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 
 
 class MetricsAnalyzerConfig(BaseSettings):
     """Configuration for the metrics analyzer service"""
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensetive="false",
+        extra="ignore"
+    )
     
     metrics_api_url: str = Field(
         default="http://localhost:8080",
@@ -22,10 +28,12 @@ class MetricsAnalyzerConfig(BaseSettings):
     
     yandex_folder_id: Optional[str] = Field(
         default=None,
+        validation_alias="YANDEX_FOLDER_ID",
         description="Yandex Cloud folder ID"
     )
     yandex_api_key: Optional[str] = Field(
         default=None,
+        validation_alias="YANDEX_API_KEY",
         description="Yandex Cloud API key"
     )
     yandex_llm_model: str = Field(
@@ -58,15 +66,6 @@ class MetricsAnalyzerConfig(BaseSettings):
         default=True,
         description="Enable LLM analysis"
     )
-    
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
-        fields = {
-            'yandex_folder_id': {'env': ['YANDEX_FOLDER_ID', 'folder_id']},
-            'yandex_api_key': {'env': ['YANDEX_API_KEY', 'api_key']},
-        }
 
 
 def load_config() -> MetricsAnalyzerConfig:

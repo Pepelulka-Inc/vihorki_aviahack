@@ -4,48 +4,70 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "9002:9002"
+      - "9002:9002" 
     environment:
       - PYTHONUNBUFFERED=1
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - POSTGRES_USER=habrpguser
+      - POSTGRES_PASSWORD=pgpwd4habr
+      - POSTGRES_DB=habrdb
+      - METRICS_API_URL=http://app:9002
+      - YANDEX_FOLDER_ID=${YANDEX_FOLDER_ID:-}
+      - YANDEX_API_KEY=${YANDEX_API_KEY:-}
+      - folder_id=${folder_id:-}
+      - api_key=${api_key:-}
+      - YANDEX_LLM_MODEL=${YANDEX_LLM_MODEL:-qwen3-235b-a22b-fp8}
+      - YANDEX_BASE_URL=https://rest-assistant.api.cloud.yandex.net/v1
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DEFAULT_REASONING_EFFORT=${DEFAULT_REASONING_EFFORT:-medium}
+      - ENABLE_API_SUBMISSION=${ENABLE_API_SUBMISSION:-true}
+      - ENABLE_LLM_ANALYSIS=${ENABLE_LLM_ANALYSIS:-true}
     depends_on:
-      - postgres
-      - redis
-    develop:
-      watch:
-        - action: sync
-          path: .
-          target: /app
-          ignore:
-            - .venv/
-            - __pycache__/
-            - "*.pyc"
-        - action: rebuild
-          path: pyproject.toml
-        - action: rebuild
-          path: uv.lock
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:9002/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   postgres:
-    image: postgres:13.3
+    image: postgres:13.3-alpine
     environment:
       POSTGRES_DB: "habrdb"
       POSTGRES_USER: "habrpguser"
       POSTGRES_PASSWORD: "pgpwd4habr"
     ports:
-      - "5433:5432"
+      - "5433:5432"  # Host:5433 → Container:5432 (avoid conflict with local postgres)
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U habrpguser -d habrdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   redis:
     image: redis:7.2-alpine
     ports:
-      - "6380:6379"  # Хост:6380 → Контейнер:6379 (чтобы не конфликтовать с локальным Redis)
+      - "6380:6379"  # Host:6380 → Container:6379 (avoid conflict with local redis)
+    command: redis-server --appendonly yes
+    volumes:
+      - redisdata:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 1s
+      interval: 5s
       timeout: 3s
       retries: 5
+      start_period: 5s
 
 volumes:
   pgdata:
+  redisdata:
