@@ -7,7 +7,7 @@ from datetime import datetime
 def get_metrics():
     hits = pd.read_hdf("data/hits.h5", key='df')
     visits = pd.read_hdf("data/visits_f.h5", key='df')
-    joins_2022 = downloads(2022)
+    joins = downloads(2022)
     joins_2024 = downloads(2024)
     n = int(input())
     if n == 1:

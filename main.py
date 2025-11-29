@@ -3,6 +3,7 @@ import json
 import logging
 import os
 from datetime import datetime, timedelta
+import aiohttp
 
 from aiohttp import web
 
@@ -269,6 +270,226 @@ async def llm_health(request: web.Request) -> web.Response:
         return web.json_response({'error': str(e)}, status=500)
 
 
+async def send_auto_request():
+    """
+    Automatically send the curl request after application starts
+    """
+    # Wait a bit for the server to be ready
+    await asyncio.sleep(2)
+    
+    url = "http://localhost:9002/api/v1/analyze-metrics?submit_to_api=false"
+    
+    payload = {
+        "metadata": {
+            "project_name": "Test Project",
+            "generated_at": "2024-01-31T12:00:00Z",
+            "data_source": "analytics_db"
+        },
+        "releases": [
+            {
+                "release_info": {
+                    "version": "v1.0.0",
+                    "data_period": {
+                        "start": "2024-01-01T00:00:00Z",
+                        "end": "2024-01-07T23:59:59Z"
+                    },
+                    "total_visits": 10000,
+                    "total_hits": 50000,
+                    "unique_clients": 8000
+                },
+                "aggregate_metrics": {
+                    "visits": {
+                        "total_count": 10000,
+                        "new_users": 3000,
+                        "returning_users": 7000,
+                        "avg_page_views": 5.2,
+                        "median_page_views": 4,
+                        "avg_duration_sec": 180,
+                        "median_duration_sec": 120,
+                        "total_duration_sec": 1800000
+                    },
+                    "page_views": {
+                        "total_count": 50000,
+                        "unique_urls": 250
+                    }
+                },
+                "session_distribution": {
+                    "by_page_views": [
+                        {"range_min": 1, "range_max": 1, "count": 2000, "percentage": 20.0},
+                        {"range_min": 2, "range_max": 5, "count": 5000, "percentage": 50.0},
+                        {"range_min": 6, "range_max": 10, "count": 2000, "percentage": 20.0},
+                        {"range_min": 11, "range_max": None, "count": 1000, "percentage": 10.0}
+                    ],
+                    "by_duration_sec": [
+                        {"range_min": 0, "range_max": 30, "count": 1000, "percentage": 10.0},
+                        {"range_min": 31, "range_max": 120, "count": 4000, "percentage": 40.0},
+                        {"range_min": 121, "range_max": 300, "count": 3000, "percentage": 30.0},
+                        {"range_min": 301, "range_max": None, "count": 2000, "percentage": 20.0}
+                    ]
+                },
+                "device_breakdown": {
+                    "by_category": [
+                        {"device_category": 1, "segment_value": "Desktop", "visits": 6000, "percentage": 60.0, "avg_page_views": 5.5, "avg_duration_sec": 200, "single_page_visits": 1000}
+                    ],
+                    "by_os": [
+                        {"segment_value": "Windows", "visits": 4000, "percentage": 40.0, "avg_page_views": 5.3, "avg_duration_sec": 190, "single_page_visits": 700}
+                    ],
+                    "by_browser": [
+                        {"segment_value": "Chrome", "visits": 5000, "percentage": 50.0, "avg_page_views": 5.1, "avg_duration_sec": 175, "single_page_visits": 1000}
+                    ],
+                    "by_screen_orientation": [
+                        {"segment_value": "landscape", "visits": 7000, "percentage": 70.0, "avg_page_views": 5.3, "avg_duration_sec": 185, "single_page_visits": 1300}
+                    ]
+                },
+                "traffic_sources": {
+                    "by_search_engine": [
+                        {"segment_value": "google", "visits": 5000, "percentage": 50.0, "avg_page_views": 5.2, "avg_duration_sec": 180, "single_page_visits": 1000}
+                    ]
+                },
+                "geographic_distribution": {
+                    "top_cities": [
+                        {"segment_value": "Moscow", "visits": 3000, "percentage": 30.0, "avg_page_views": 5.5, "avg_duration_sec": 200, "single_page_visits": 500}
+                    ]
+                },
+                "page_metrics": [
+                    {"url": "/home", "title": "Home", "visits_as_entry": 5000, "visits_as_exit": 2000, "total_hits": 8000, "unique_visitors": 4500, "visits_with_single_page": 1000, "subsequent_page_diversity": 15}
+                ],
+                "navigation_patterns": {
+                    "reverse_navigation": {"visits_with_reverse_nav": 2000, "percentage": 20.0, "total_reverse_transitions": 3500},
+                    "common_transitions": [
+                        {"from_url": "/home", "to_url": "/products", "transition_count": 3000}
+                    ],
+                    "loop_patterns": [
+                        {"sequence": ["/products", "/detail", "/products"], "occurrences": 500}
+                    ]
+                },
+                "funnel_metrics": {
+                    "application_funnel": [
+                        {"step": 1, "url": "/home", "visits_entered": 10000, "visits_completed": 7000}
+                    ]
+                },
+                "session_complexity_metrics": {
+                    "high_interaction_sessions": {"sessions_with_10plus_pages": 1000, "percentage": 10.0, "avg_pages": 15.5, "avg_duration_sec": 450, "avg_unique_urls": 12.3},
+                    "url_revisit_patterns": {"sessions_with_url_revisits": 2500, "percentage": 25.0, "avg_revisits_per_session": 2.8, "avg_unique_urls_revisited": 1.9}
+                }
+            },
+            {
+                "release_info": {
+                    "version": "v1.1.0",
+                    "data_period": {
+                        "start": "2024-01-24T00:00:00Z",
+                        "end": "2024-01-31T23:59:59Z"
+                    },
+                    "total_visits": 11500,
+                    "total_hits": 57500,
+                    "unique_clients": 9200
+                },
+                "aggregate_metrics": {
+                    "visits": {
+                        "total_count": 11500,
+                        "new_users": 3450,
+                        "returning_users": 8050,
+                        "avg_page_views": 5.98,
+                        "median_page_views": 5,
+                        "avg_duration_sec": 207,
+                        "median_duration_sec": 138,
+                        "total_duration_sec": 2070000
+                    },
+                    "page_views": {
+                        "total_count": 57500,
+                        "unique_urls": 288
+                    }
+                },
+                "session_distribution": {
+                    "by_page_views": [
+                        {"range_min": 1, "range_max": 1, "count": 1800, "percentage": 15.7},
+                        {"range_min": 2, "range_max": 5, "count": 5500, "percentage": 47.8},
+                        {"range_min": 6, "range_max": 10, "count": 2700, "percentage": 23.5},
+                        {"range_min": 11, "range_max": None, "count": 1500, "percentage": 13.0}
+                    ],
+                    "by_duration_sec": [
+                        {"range_min": 0, "range_max": 30, "count": 900, "percentage": 7.8},
+                        {"range_min": 31, "range_max": 120, "count": 4200, "percentage": 36.5},
+                        {"range_min": 121, "range_max": 300, "count": 3800, "percentage": 33.0},
+                        {"range_min": 301, "range_max": None, "count": 2600, "percentage": 22.6}
+                    ]
+                },
+                "device_breakdown": {
+                    "by_category": [
+                        {"device_category": 1, "segment_value": "Desktop", "visits": 6900, "percentage": 60.0, "avg_page_views": 6.3, "avg_duration_sec": 230, "single_page_visits": 900}
+                    ],
+                    "by_os": [
+                        {"segment_value": "Windows", "visits": 4600, "percentage": 40.0, "avg_page_views": 6.1, "avg_duration_sec": 219, "single_page_visits": 600}
+                    ],
+                    "by_browser": [
+                        {"segment_value": "Chrome", "visits": 5750, "percentage": 50.0, "avg_page_views": 5.9, "avg_duration_sec": 201, "single_page_visits": 950}
+                    ],
+                    "by_screen_orientation": [
+                        {"segment_value": "landscape", "visits": 8050, "percentage": 70.0, "avg_page_views": 6.1, "avg_duration_sec": 213, "single_page_visits": 1200}
+                    ]
+                },
+                "traffic_sources": {
+                    "by_search_engine": [
+                        {"segment_value": "google", "visits": 5750, "percentage": 50.0, "avg_page_views": 5.98, "avg_duration_sec": 207, "single_page_visits": 950}
+                    ]
+                },
+                "geographic_distribution": {
+                    "top_cities": [
+                        {"segment_value": "Moscow", "visits": 3450, "percentage": 30.0, "avg_page_views": 6.3, "avg_duration_sec": 230, "single_page_visits": 450}
+                    ]
+                },
+                "page_metrics": [
+                    {"url": "/home", "title": "Home", "visits_as_entry": 5750, "visits_as_exit": 2100, "total_hits": 9200, "unique_visitors": 5175, "visits_with_single_page": 900, "subsequent_page_diversity": 17}
+                ],
+                "navigation_patterns": {
+                    "reverse_navigation": {"visits_with_reverse_nav": 2300, "percentage": 20.0, "total_reverse_transitions": 4025},
+                    "common_transitions": [
+                        {"from_url": "/home", "to_url": "/products", "transition_count": 3450}
+                    ],
+                    "loop_patterns": [
+                        {"sequence": ["/products", "/detail", "/products"], "occurrences": 575}
+                    ]
+                },
+                "funnel_metrics": {
+                    "application_funnel": [
+                        {"step": 1, "url": "/home", "visits_entered": 11500, "visits_completed": 8050}
+                    ]
+                },
+                "session_complexity_metrics": {
+                    "high_interaction_sessions": {"sessions_with_10plus_pages": 1150, "percentage": 10.0, "avg_pages": 17.8, "avg_duration_sec": 518, "avg_unique_urls": 14.1},
+                    "url_revisit_patterns": {"sessions_with_url_revisits": 2875, "percentage": 25.0, "avg_revisits_per_session": 3.2, "avg_unique_urls_revisited": 2.2}
+                }
+            }
+        ]
+    }
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            logger.info("Sending automatic request to analyze-metrics endpoint...")
+            async with session.post(url, json=payload, headers={"Content-Type": "application/json"}) as response:
+                response_text = await response.text()
+                logger.info(f"Response status: {response.status}")
+                logger.info(f"Response: {response_text}")
+                
+                # Print the response in a formatted way
+                try:
+                    response_json = json.loads(response_text)
+                    print("\n" + "="*50)
+                    print("AUTO-REQUEST RESULT:")
+                    print("="*50)
+                    print(json.dumps(response_json, indent=2, ensure_ascii=False))
+                    print("="*50)
+                except json.JSONDecodeError:
+                    print("\n" + "="*50)
+                    print("AUTO-REQUEST RESULT:")
+                    print("="*50)
+                    print(response_text)
+                    print("="*50)
+                
+    except Exception as e:
+        logger.error(f"Error sending auto-request: {e}")
+
+
 app = web.Application()
 app.on_startup.append(on_startup)
 app.on_cleanup.append(on_cleanup)
@@ -285,4 +506,27 @@ app.router.add_get('/api/v1/llm-health', llm_health)
 if __name__ == '__main__':
     port = int(os.getenv('APP_PORT', 9002))
     logger.info(f'Starting vihorki service on port {port}')
-    web.run_app(app, host='0.0.0.0', port=port)
+    
+    # Create the event loop
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    
+    # Start the web application
+    runner = web.AppRunner(app)
+    loop.run_until_complete(runner.setup())
+    site = web.TCPSite(runner, '0.0.0.0', port)
+    loop.run_until_complete(site.start())
+    
+    logger.info(f'Server started at http://0.0.0.0:{port}')
+    
+    # Schedule the auto-request to run after the server starts
+    loop.create_task(send_auto_request())
+    
+    try:
+        # Run forever
+        loop.run_forever()
+    except KeyboardInterrupt:
+        logger.info("Shutting down...")
+    finally:
+        loop.run_until_complete(runner.cleanup())
+        loop.close()

@@ -30,8 +30,9 @@ class VisitTable(Base):
 class HitTable(Base):
     __tablename__ = 'hits'
 
-    watch_id = Column(String, primary_key=True, name='watch_id')
-    client_id = Column(String, name='client_id')
-    url = Column(String, name='url')
-    datetime_hit = Column(DateTime, name='datetime_hit')
+    watch_id = Column(String, primary_key=True, name='watchID')
+    client_id = Column(String, name='clientID')
+    url = Column(String, name='URL')
+    datetime_hit = Column(DateTime, name='dateTime')
     title = Column(String, name='title')
+    is_page_view = Column(Boolean, name='isPageView')
