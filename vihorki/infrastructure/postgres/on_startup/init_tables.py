@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, BigInteger
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
@@ -7,7 +7,7 @@ Base = declarative_base()
 class VisitTable(Base):
     __tablename__ = 'visits'
 
-    visit_id = Column(Integer, primary_key=True, name='visitId')
+    visit_id = Column(BigInteger, primary_key=True, name='visitId')
     watch_ids = Column(String, name='watchIDs')
     date_time = Column(DateTime, name='dateTime')
     is_new_user = Column(Boolean, name='isNewUser')

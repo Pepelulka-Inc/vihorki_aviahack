@@ -5,21 +5,21 @@ from attr import dataclass
 
 @dataclass(slots=True, frozen=True)
 class Visit:
-    visitId: int
-    watchIDs: str
-    dateTime: datetime
-    isNewUser: bool
-    startURL: str
-    endURL: str
-    pageViews: int
-    visitDuration: int
-    regionCity: str
-    clientID: str
-    lastSearchEngineRoot: str
-    deviceCategory: int
-    mobilePhone: str
-    mobilePhoneModel: str
-    operatingSystem: str
+    visit_id: int
+    watch_ids: str
+    date_time: datetime
+    is_new_user: bool
+    start_url: str
+    end_url: str
+    page_views: int
+    visit_duration: int
+    region_city: str
+    client_id: str
+    last_search_engine_root: str
+    device_category: int
+    mobile_phone: str
+    mobile_phone_model: str
+    operating_system: str
     browser: str
-    screenFormat: str
-    screenOrientationName: str
+    screen_format: str
+    screen_orientation_name: str
