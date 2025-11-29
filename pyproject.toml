@@ -56,6 +56,11 @@ target-version = "py311"
  
 [tool.ruff.lint]
 ignore = [
+  "PLR0914",
+  "PLR0915",
+  "PLR6201",
+  "PLR0911",
+  "PLR0912",
   "RET504",
   "ANN001",
   "ANN204", # returning type for init method
