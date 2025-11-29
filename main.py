@@ -18,11 +18,7 @@ async def on_startup(app):
 
 
 async def healthcheck(request):
-    health_data = {
-        'status': 'healthy',
-        'timestamp': asyncio.get_event_loop().time(),
-        'service': 'vihorki'
-    }
+    health_data = {'status': 'healthy', 'timestamp': asyncio.get_event_loop().time(), 'service': 'vihorki'}
     return web.json_response(health_data)
 
 
